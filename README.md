@@ -2,8 +2,8 @@
 
 Basic implementations of the follow algorithms:
 
-- Bubblesort;
-- MergeSort;
-- ShellSort;
-- RadixSort;
-- QuickSort;
+- Bubblesort
+- MergeSort
+- ShellSort
+- RadixSort
+- QuickSort
