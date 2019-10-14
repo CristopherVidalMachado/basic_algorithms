@@ -6,4 +6,4 @@ Basic implementations of the follow algorithms:
 - MergeSort
 - ShellSort
 - RadixSort
-- QuickSort
+- QuickSort;
