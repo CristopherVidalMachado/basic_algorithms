@@ -1,3 +1,5 @@
+#define SIZE_ELEMENTS 10000
+
 #include <stdio.h>
 
 #include <stdlib.h>
@@ -7,32 +9,17 @@
 #include "file.h"
 
 #include "file.c"
+#include "algorithm.h"
 
-#define SIZE_ELEMENTS 10000
+#include "algorithm.c"
 
-void bubble_sort (int vetor[], int n) {
-    int k, j, aux;
+#include <curses.h>
+#include <unistd.h> // For sleep()
+#include <string.h> // For strlen()
 
-    for (k = 1; k < n; k++) {
 
 
-        for (j = 0; j < n - 1; j++) {
-            if (vetor[j] > vetor[j + 1]) {
-                aux          = vetor[j];
-                vetor[j]     = vetor[j + 1];
-                vetor[j + 1] = aux;
-            }
-        }
-    }
-    FILE* bubbleArquivo = fopen("saida-bubble.txt", "w");
-    for ( k = 0; k < SIZE_ELEMENTS; k++)
-    {
-        fprintf(bubbleArquivo, "%d\n", vetor[k]);
-    }
-    fclose(bubbleArquivo);
-    getch();
-    
-}
+
 void merge(int vetor[], int comeco, int meio, int fim) {
 
     int com1 = comeco, com2 = meio+1, comAux = 0, tam = fim-comeco+1;
@@ -194,17 +181,21 @@ int main()
     initscr();
     cbreak();
     clear();
+    int isAlreadyGenerateBasicFiles = 0;
     char option;
     do
     {
 
-        printw("1: Gerar entrada.\n");
-        printw("2: Bubblesort.\n");
-        printw("3: MergeSort.\n");
-        printw("4: ShellSort.\n");
-        printw("5. RadixSort.\n");
-        printw("6. QuickSort.\n");
-        printw("7. Análise Assintótica.\n");
+        printw("1: Gerar entrada\n");
+        if(isAlreadyGenerateBasicFiles){
+            printw("2: Bubblesort\n");
+            printw("3: MergeSort\n");
+            printw("4: ShellSort\n");
+            printw("5: RadixSort\n");
+            printw("6: QuickSort\n");
+            printw("7: Análise Assintótica\n");
+        }
+  
         printw("0: Sair.\n");
         refresh();
         option = getch();
@@ -214,35 +205,39 @@ int main()
         {
             
             clear();            
-            FILE *fp = createFile();
-            insertRandomNumbersInFile(fp,-(SIZE_ELEMENTS), SIZE_ELEMENTS, SIZE_ELEMENTS);
-            closeFile(fp);
-            clear();
-            printw("Arquivo criado com sucesso!");
+            createFile("entrada/entrada.bin");
+            createFile("entrada/entrada.txt");
+            insertRandomNumbersInFile("entrada/entrada.txt", "entrada/entrada.bin", SIZE_ELEMENTS); 
+            printw("Pressione qualquer tecla para continuar...");
             getch();
             clear(); 
+            isAlreadyGenerateBasicFiles++;
         }
         else if (option == '2')
         {
-            clear();   
-
+          
             int *buffer = malloc(sizeof(int));
-            FILE* arquivo = fopen("entrada.txt", "rb");
+
+            FILE* arquivo = fopen("entrada/entrada.bin", "rb");
+            
             fseek(arquivo, 0, SEEK_SET);
+            
             register int k = 0; 
+            
             int vetor[SIZE_ELEMENTS];
+            
             for ( k = 0; k < SIZE_ELEMENTS; k++)
             {
-                fread( buffer, sizeof(int), 1, arquivo);
+                fread(buffer, sizeof(int), 1, arquivo);
                 vetor[k] = *buffer;
-                printw("%d\n", *buffer);
-                 
             }
 
-            bubble_sort(vetor, SIZE_ELEMENTS);
-
-
+            bubbleSort(vetor, SIZE_ELEMENTS);
+            clear();
+            printw("Bubble Sort! Digite qualquer tecla para continuar...");
+            getch();
             clear(); 
+            
         }
         else if (option == '3')
         {
@@ -263,8 +258,11 @@ int main()
             }
             int arr_size = sizeof(vetor[SIZE_ELEMENTS])/sizeof(vetor[0]);
             mergeSort(vetor, 0, SIZE_ELEMENTS - 1); 
-    
+             clear();
+            printw("Merge Sort! Digite qualquer tecla para continuar...");
+            getch();
             clear(); 
+            refresh();
         }
         else if (option == '4')
         {
@@ -360,12 +358,16 @@ int main()
 
     } while (option != '0');
 	endwin();
-    remove("entrada.txt");
+    remove("entrada/entrada.txt");
+    remove("entrada/entrada.bin");
+    remove("bubble/bubble.txt");
+  
+  
     return 0;
 
     // int i;
     
-    // FILE *fp = createFile();
+    // FILE *fp = createBinaryFile();
     // insertRandomNumbersInFile(fp,-(SIZE_ELEMENTS), SIZE_ELEMENTS, SIZE_ELEMENTS);
     // fclose(fp);
     

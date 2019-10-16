@@ -8,8 +8,8 @@
  * 
  * @return *FILE
  */
-FILE* createFile();
-
+void* createBinaryFile(char *path);
+void* createReadbleFile();
 /**
  * Cria valores randomicos dentro de um range definido por min e max.
  * 
@@ -20,7 +20,7 @@ int randomNumbers(int min, int max);
  * Coloca um total de números aleatórios em um arquivo aberto.
  * 
  */
-void insertRandomNumbersInFile(FILE *fp, int min, int max, int totalNumbers);
+void insertRandomNumbersInFile(char *textualFile, char *binaryFile, int totalNumbers);
 
 /**
  * Fecha o arquivo aberto
